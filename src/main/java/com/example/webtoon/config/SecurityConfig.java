@@ -1,10 +1,10 @@
 package com.example.webtoon.config;
 
-import org.springframework.context.annotation.Bean; // Bean 선언 import
-import org.springframework.context.annotation.Configuration; // 설정 클래스 import
-import org.springframework.security.config.Customizer; // 기본 설정용 import
-import org.springframework.security.config.annotation.web.builders.HttpSecurity; // HttpSecurity import
-import org.springframework.security.web.SecurityFilterChain; // 필터체인 import
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 
 //시큐리티 설정 클래스
 @Configuration
@@ -15,8 +15,19 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
+                .headers(headers -> headers.frameOptions(frame -> frame.disable())) //H2 콘솔은 iframe으로 열림 그래서 비활성화 해야함
                 .authorizeHttpRequests(auth -> auth // 요청 인가 규칙 부분
-                        .requestMatchers("/api/securityTest").permitAll() // securityTest는 모두 허용으로 일단 테스트 부터
+                        //홈과 파비콘 허용
+                        .requestMatchers("/", "/favicon.ico").permitAll()
+
+                        // 정적 리소스 허용
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+
+                        // H2 콘솔 허용(개발용)
+                        .requestMatchers("/h2-console/**").permitAll()
+
+                        // securityTest는 모두 허용으로 일단 테스트 부터
+                        .requestMatchers("/api/securityTest").permitAll()
                         .anyRequest().authenticated() // 나머지는 전부 인증 필요
                 )
                 .httpBasic(Customizer.withDefaults());
