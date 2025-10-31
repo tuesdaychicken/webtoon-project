@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = WebtoonApplication.class)
 @ActiveProfiles("test")
-public class DbConnectivityTest {
+class DbConnectivityTest {
     @Autowired
     JdbcTemplate jdbc;
 
