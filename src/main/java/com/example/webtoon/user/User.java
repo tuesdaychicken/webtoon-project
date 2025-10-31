@@ -27,7 +27,7 @@ public class User {
 
     //로그인 아이디
     @Setter
-    @Column(name = "USERNAME", nullable = false, length = 50)
+    @Column(name = "USERNAME", unique = true, nullable = false, length = 50)
     private String username;
 
     //로그인 비민번호
