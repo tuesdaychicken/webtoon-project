@@ -1,15 +1,14 @@
 package com.example.webtoon.user;
 
-import com.example.webtoon.WebtoonApplication;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -22,16 +21,22 @@ class UserRepositoryTest {
     @Test
     @DisplayName("USERS: 저장 후 조회")
     void saveAndFind() {
-        User u = new User();
-        u.setName("repoTest");
-        u.setEmail("repoTest@example.com");
+        User saved = repo.save(
+                User.builder()
+                        .username("testRepo")
+                        .name("황규성")
+                        .nickname("테스트다")
+                        .email("test@example.com")
+                        .password("raw-password")
+                        .build()
+        );
 
-        User saved = repo.save(u);
-        assertNotNull(saved.getId());
+        Optional<User> found = repo.findByUsername("testRepo");
 
-        User found = repo.findById(saved.getId()).orElseThrow();
-        assertEquals("repoTest", found.getName());
-        assertEquals("repoTest@example.com", found.getEmail());
-        assertNotNull(found.getCreatedAt());
+        assertThat(found).isPresent();
+        assertThat(found.get().getId()).isNotNull();        // PK가 발급되었는지
+        assertThat(found.get().getName()).isEqualTo("황규성");
+        assertThat(found.get().getNickname()).isEqualTo("테스트다");
+        assertThat(found.get().getEmail()).isEqualTo("test@example.com");
     }
 }
