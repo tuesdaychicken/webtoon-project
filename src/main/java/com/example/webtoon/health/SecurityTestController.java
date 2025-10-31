@@ -1,4 +1,4 @@
-package com.example.webtoon.securitytest;
+package com.example.webtoon.health;
 
 import org.springframework.http.ResponseEntity; // 응답 객체 import
 import org.springframework.web.bind.annotation.GetMapping; // GET 매핑 import

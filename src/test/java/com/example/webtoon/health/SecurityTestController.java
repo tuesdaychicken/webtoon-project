@@ -1,4 +1,4 @@
-package com.example.webtoon.securitytest;
+package com.example.webtoon.health;
 
 import org.junit.jupiter.api.DisplayName; // 테스트 표기 import
 import org.junit.jupiter.api.Test; // 테스트 어노테이션 import
@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class SecurityTestControllerTest {
+class SecurityTestController{
 
     @Autowired
     private MockMvc mockMvc; // HTTP 호출 흉내 객체

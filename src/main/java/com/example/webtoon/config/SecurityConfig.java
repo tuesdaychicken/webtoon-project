@@ -23,8 +23,8 @@ public class SecurityConfig {
                         // 정적 리소스 허용
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
 
-                        // H2 콘솔 허용(개발용)
-                        .requestMatchers("/h2-console/**").permitAll()
+                        //디비 테스트 경로
+                        .requestMatchers("/api/dbcheck").permitAll()
 
                         // securityTest는 모두 허용으로 일단 테스트 부터
                         .requestMatchers("/api/securityTest").permitAll()
