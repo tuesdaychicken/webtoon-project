@@ -95,4 +95,19 @@ class UserServiceTest {
         assertThat(updated.getEmail()).isEqualTo("updateTest@ex.com");
         assertThat(updated.getNickname()).isEqualTo("업데이트후");
     }
+
+    @DisplayName("기존 사용자 changePassword 호출, 비밀번호 해시가 변경되었는지 이전값과 비교")
+    @Test
+    void changePassword_success() {
+        // Given
+        userService.register("pwUpdateTest", "pwTest", "pwOld", "a@ex.com", "비번수정");
+        String beforeHash = userRepository.findByUsername("pwUpdateTest").orElseThrow().getPassword();
+
+        // When
+        userService.changePassword("pwUpdateTest", "pwNew");
+
+        // Then
+        String afterHash = userRepository.findByUsername("pwUpdateTest").orElseThrow().getPassword();
+        assertThat(afterHash).isNotEqualTo(beforeHash);
+    }
 }
