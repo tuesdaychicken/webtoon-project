@@ -14,8 +14,11 @@ import static org.assertj.core.api.Assertions.*;
 @Import({com.example.webtoon.support.PasswordEncoderTestConfig.class, UserService.class})
 class UserServiceTest {
 
-    @Autowired UserRepository userRepository;
-    @Autowired UserService userService;
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    UserService userService;
 
     @Test
     @DisplayName("회원가입 시 name 중복이면 예외가 발생한다")
@@ -38,7 +41,7 @@ class UserServiceTest {
                         "pass1234",
                         "a2@ex.com",
                         "테스트"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("이미 사용 중인 username");
     }
 
@@ -109,5 +112,19 @@ class UserServiceTest {
         // Then
         String afterHash = userRepository.findByUsername("pwUpdateTest").orElseThrow().getPassword();
         assertThat(afterHash).isNotEqualTo(beforeHash);
+    }
+
+    @DisplayName("기존 사용자 deleteByUsername 호출, 사용자 조회 후 삭제 되었는지 조회를 통해 확인")
+    @Test
+    void delete_success() {
+        // Given
+        userService.register("deleteTest", "deleteTest", "pw", "a@ex.com", "deleteTest");
+        assertThat(userRepository.existsByUsername("deleteTest")).isTrue();
+
+        // When
+        userService.deleteByUsername("deleteTest");
+
+        // Then
+        assertThat(userRepository.existsByUsername("deleteTest")).isFalse();
     }
 }

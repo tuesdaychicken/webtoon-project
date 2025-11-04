@@ -19,8 +19,8 @@ class UserRepositoryTest {
     UserRepository repo;
 
     @Test
-    @DisplayName("USERS: 저장 후 조회")
-    void saveAndFind() {
+    @DisplayName("사용자 저장 후 조회")
+    void save_and_find() {
         User saved = repo.save(
                 User.builder()
                         .username("testRepo")

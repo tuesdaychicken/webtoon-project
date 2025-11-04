@@ -1,5 +1,7 @@
 package com.example.webtoon.user;
 
+import com.example.webtoon.user.exception.UserNotFoundException;
+import com.example.webtoon.user.exception.UsernameAlreadyExistsException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -7,6 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * User 비즈니스 로직
+ * 생성, 조회, 수정, 삭제
+ */
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -15,20 +21,22 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * 유저 생성
+     * 유저 생성, 회원 가입
      * @param username
      * @param name
      * @param rawPassword
      * @param email
      * @param nickname
      * @return 유저 기본키 seq id값(Long)
+     * 유저 중복 409 예외
      */
     @Transactional
     public Long register(String username, String name, String rawPassword, String email, String nickname) {
 
         // username 중복 검증
         if (userRepository.existsByUsername(username)) {
-            throw new RuntimeException("이미 사용 중인 username 입니다: " + username);
+            // 예외 처리, 유저 중복이면 409 예외
+            throw new UsernameAlreadyExistsException(username);
         }
 
         // 비밀번호 암호화
@@ -62,11 +70,13 @@ public class UserService {
      * @param name
      * @param email
      * @param nickname
+     * 유저 없음 404 예외
      */
     @Transactional
     public void updateUser(String username, String name, String email, String nickname) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다: " + username));
+                // 예외 처리, 유저 없으면 404로 매핑될 예외
+                .orElseThrow(() -> new UserNotFoundException(username));
         user.updateProfile(name, email, nickname); // JPA 변경 감지하여 반영
     }
 
@@ -74,11 +84,13 @@ public class UserService {
      * 유저 비밀번호 변경
      * @param username
      * @param rawPassword
+     * 예외 처리, pw 바꿀 유저 없는 경우 404
      */
     @Transactional
     public void changePassword(String username, String rawPassword) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다: " + username));
+                // 예외 처리, 유저 없으면 404
+                .orElseThrow(() -> new UserNotFoundException(username));
         String encoded = passwordEncoder.encode(rawPassword);
         user.changePassword(encoded); // JPA 변경 감지하여 반영
     }
@@ -86,11 +98,13 @@ public class UserService {
     /**
      * 유저 삭제
      * @param username
+     * 예외 처리, 삭제할 유저 없으면 404
      */
     @Transactional
     public void deleteByUsername(String username) {
         if (!userRepository.existsByUsername(username)) {
-            throw new RuntimeException("사용자를 찾을 수 없습니다: " + username);
+            //예외 처리, 유저 없으면 404
+            throw new UserNotFoundException(username);
         }
         userRepository.deleteByUsername(username);
     }
