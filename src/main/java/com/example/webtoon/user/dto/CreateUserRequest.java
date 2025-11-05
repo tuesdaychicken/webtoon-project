@@ -4,15 +4,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * 유저 수정 요청 DTO
- * 뷰단에서 넘어온 json을 DTO에 담아서 서비스로
- */
 @Getter
 @Setter
 @NoArgsConstructor
-public class UpdateUserRequest {
+public class CreateUserRequest {
+
+    private String username;
     private String name;
+    private String password;
     private String email;
     private String nickname;
 }

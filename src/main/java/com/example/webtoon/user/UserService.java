@@ -65,7 +65,7 @@ public class UserService {
     }
 
     /**
-     * 유저 수정 (이름, 이메일, 닉네임)
+     * 유저 일부 수정 (이름, 이메일, 닉네임)
      * @param username
      * @param name
      * @param email

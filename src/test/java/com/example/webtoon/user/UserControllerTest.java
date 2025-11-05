@@ -2,6 +2,7 @@ package com.example.webtoon.user;
 
 import com.example.webtoon.user.dto.ChangePasswordRequest;
 
+import com.example.webtoon.user.dto.CreateUserRequest;
 import com.example.webtoon.user.dto.UpdateUserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -16,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -29,6 +30,72 @@ class UserControllerTest {
     @Autowired ObjectMapper om;
     @Autowired UserService userService;
     @Autowired UserRepository userRepository;
+
+    @DisplayName("사용자 생성 테스트, 201 응답")
+    @Test
+    void create_user_save_db() throws Exception {
+        // Given
+        CreateUserRequest req = new CreateUserRequest();
+        req.setUsername("createA");
+        req.setName("createA");
+        req.setPassword("pw");
+        req.setEmail("a@ex.com");
+        req.setNickname("생성테스트");
+
+        // When & Then (상태코드 + Location 헤더 확인)
+        mvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(req)))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "/api/users/createA"));
+
+        // Then
+        User saved = userRepository.findByUsername("createA").orElseThrow();
+        assertThat(saved.getName()).isEqualTo("createA");
+    }
+
+    @DisplayName("사용자 중복일 경우 409 응답")
+    @Test
+    void create_user_duplication() throws Exception {
+        // Given
+        userService.register("중복", "중복 저장", "pw", "a@ex.com", "중복");
+        CreateUserRequest req = new CreateUserRequest();
+        req.setUsername("중복");
+        req.setName("중복 생성");
+        req.setPassword("pw");
+        req.setEmail("a@ex.com");
+        req.setNickname("중복");
+
+        // When & Then
+        mvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(req)))
+                .andExpect(status().isConflict());
+    }
+
+    @DisplayName("사용자 조회 성공시 응답 200")
+    @Test
+    void get_user_data_test() throws Exception {
+        // Given
+        userService.register("check", "조회", "pw", "a@ex.com", "조회");
+
+        // When & Then
+        mvc.perform(get("/api/users/{username}", "check"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("check"))
+                .andExpect(jsonPath("$.name").value("조회"))
+                .andExpect(jsonPath("$.email").value("a@ex.com"))
+                .andExpect(jsonPath("$.nickname").value("조회"));
+    }
+
+    @DisplayName("없는 사용자 조회 404 응답")
+    @Test
+    void getUser_404() throws Exception {
+
+        // When & Then
+        mvc.perform(get("/api/users/{username}", "nix"))
+                .andExpect(status().isNotFound());
+    }
 
     @DisplayName("기존 사용자 수정 요청시 204 응답 + DB 값이 바뀐다")
     @Test
