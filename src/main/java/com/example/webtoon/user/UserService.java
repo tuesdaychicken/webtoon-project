@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+
 /**
  * User 비즈니스 로직
  * 생성, 조회, 수정, 삭제
@@ -19,6 +20,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private static boolean isBlank(String s) { return s == null || s.trim().isEmpty(); }
 
     /**
      * 유저 생성, 회원 가입
@@ -74,6 +77,12 @@ public class UserService {
      */
     @Transactional
     public void updateUser(String username, String name, String email, String nickname) {
+
+        //업데이트 요청시 변경사항이 한개도 없는 것을 방지하기 위한 예외처리
+        if (isBlank(name) && isBlank(email) && isBlank(nickname)) {
+            throw new IllegalArgumentException("수정할 필드가 없습니다. 이름 / 이메일 / 닉네임 중 최소 1개는 필요합니다.");
+        }
+
         User user = userRepository.findByUsername(username)
                 // 예외 처리, 유저 없으면 404로 매핑될 예외
                 .orElseThrow(() -> new UserNotFoundException(username));

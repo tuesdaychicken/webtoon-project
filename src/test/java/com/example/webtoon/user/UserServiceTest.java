@@ -28,7 +28,7 @@ class UserServiceTest {
                 User.builder()
                         .username("serviceTest")
                         .name("serviceTest")
-                        .password("encoded")    // 테스트용
+                        .password("pw123456")    // 테스트용
                         .email("a@ex.com")
                         .nickname("테스트")
                         .build());
@@ -38,7 +38,7 @@ class UserServiceTest {
                 userService.register(
                         "serviceTest",
                         "test",
-                        "pass1234",
+                        "pw123456",
                         "a2@ex.com",
                         "테스트"))
                 .isInstanceOf(RuntimeException.class)
@@ -52,13 +52,13 @@ class UserServiceTest {
         Long id = userService.register(
                 "testService1",
                 "test",
-                "pw",
+                "pw123456",
                 "a@ex.com",
                 "테스트1");
 
         // then
         User saved = userRepository.findById(id).orElseThrow();
-        assertThat(saved.getPassword()).isNotEqualTo("pw");
+        assertThat(saved.getPassword()).isNotEqualTo("pw123456");
         assertThat(saved.getPassword()).startsWith("$2a")
                 .as("BCrypt 포맷이어야 함");
     }
@@ -70,7 +70,7 @@ class UserServiceTest {
         Long id = userService.register(
                 "me",
                 "test",
-                "pw",
+                "pw123456",
                 "a@ex.com",
                 "테스트2");
 
@@ -87,7 +87,7 @@ class UserServiceTest {
     @Test
     void updateUser_success() {
         // Given
-        userService.register("updateTest", "test", "p!", "test@ex.com", "업데이트전");
+        userService.register("updateTest", "test", "pw123456", "test@ex.com", "업데이트전");
 
         // When
         userService.updateUser("updateTest", "testUpdate", "updateTest@ex.com", "업데이트후");
@@ -103,11 +103,11 @@ class UserServiceTest {
     @Test
     void changePassword_success() {
         // Given
-        userService.register("pwUpdateTest", "pwTest", "pwOld", "a@ex.com", "비번수정");
+        userService.register("pwUpdateTest", "pwTest", "pw123456old", "a@ex.com", "비번수정");
         String beforeHash = userRepository.findByUsername("pwUpdateTest").orElseThrow().getPassword();
 
         // When
-        userService.changePassword("pwUpdateTest", "pwNew");
+        userService.changePassword("pwUpdateTest", "pw123456new");
 
         // Then
         String afterHash = userRepository.findByUsername("pwUpdateTest").orElseThrow().getPassword();
@@ -118,7 +118,7 @@ class UserServiceTest {
     @Test
     void delete_success() {
         // Given
-        userService.register("deleteTest", "deleteTest", "pw", "a@ex.com", "deleteTest");
+        userService.register("deleteTest", "deleteTest", "pw123456", "a@ex.com", "deleteTest");
         assertThat(userRepository.existsByUsername("deleteTest")).isTrue();
 
         // When

@@ -27,7 +27,7 @@ class UserRepositoryTest {
                         .name("황규성")
                         .nickname("테스트다")
                         .email("test@example.com")
-                        .password("raw-password")
+                        .password("pw123456")
                         .build()
         );
 

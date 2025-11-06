@@ -38,7 +38,7 @@ class UserControllerTest {
         CreateUserRequest req = new CreateUserRequest();
         req.setUsername("createA");
         req.setName("createA");
-        req.setPassword("pw");
+        req.setPassword("pw123456");
         req.setEmail("a@ex.com");
         req.setNickname("생성테스트");
 
@@ -58,11 +58,11 @@ class UserControllerTest {
     @Test
     void create_user_duplication() throws Exception {
         // Given
-        userService.register("중복", "중복 저장", "pw", "a@ex.com", "중복");
+        userService.register("중복", "중복 저장", "pw123456", "a@ex.com", "중복");
         CreateUserRequest req = new CreateUserRequest();
         req.setUsername("중복");
         req.setName("중복 생성");
-        req.setPassword("pw");
+        req.setPassword("pw123456");
         req.setEmail("a@ex.com");
         req.setNickname("중복");
 
@@ -77,7 +77,7 @@ class UserControllerTest {
     @Test
     void get_user_data_test() throws Exception {
         // Given
-        userService.register("check", "조회", "pw", "a@ex.com", "조회");
+        userService.register("check", "조회", "pw123456", "a@ex.com", "조회");
 
         // When & Then
         mvc.perform(get("/api/users/{username}", "check"))
@@ -101,7 +101,7 @@ class UserControllerTest {
     @Test
     void update_user_change_db() throws Exception {
         // Given
-        userService.register("updateA", "updateA", "pw", "a@ex.com", "수정전");
+        userService.register("updateA", "updateA", "pw123456", "a@ex.com", "수정전");
         UpdateUserRequest req = new UpdateUserRequest();
         req.setName("updateB"); req.setEmail("test@new.com"); req.setNickname("수정후");
 
@@ -122,10 +122,10 @@ class UserControllerTest {
     @Test
     void change_password_and_hashChanged() throws Exception {
         // Given
-        userService.register("pwUpdate", "pwUpdateName", "oldPw", "a@ex.com", "비번컨트롤테스트");
+        userService.register("pwUpdate", "pwUpdateName", "oldPw1234", "a@ex.com", "비번컨트롤테스트");
         String beforeHash = userRepository.findByUsername("pwUpdate").orElseThrow().getPassword();
         ChangePasswordRequest req = new ChangePasswordRequest();
-        req.setNewPassword("newPw");
+        req.setNewPassword("newPw1234");
 
         // When & Then
         mvc.perform(patch("/api/users/{username}/password", "pwUpdate")
@@ -142,8 +142,8 @@ class UserControllerTest {
     @Test
     void delete_user_removed_db() throws Exception {
         // Given
-        userService.register("deleteA", "삭제", "pw", "a@ex.com", "삭제A");
-        assertThat(userRepository.existsByUsername("erin")).isTrue();
+        userService.register("deleteA", "삭제", "pw123456", "a@ex.com", "삭제A");
+        assertThat(userRepository.existsByUsername("deleteA")).isTrue();
 
         // When & Then
         mvc.perform(delete("/api/users/{username}", "deleteA"))

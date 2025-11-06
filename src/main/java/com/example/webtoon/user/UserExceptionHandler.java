@@ -1,6 +1,6 @@
 package com.example.webtoon.user;
 
-import com.example.webtoon.user.dto.ErrorResponse;
+import com.example.webtoon.common.ErrorResponse;
 
 import com.example.webtoon.user.exception.UserNotFoundException;
 import com.example.webtoon.user.exception.UsernameAlreadyExistsException;
@@ -8,6 +8,7 @@ import com.example.webtoon.user.exception.UsernameAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -17,6 +18,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice
 public class UserExceptionHandler {
+
+    // @Valid 검증 실패, 400
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException e) {
+
+        String message = e.getBindingResult().getAllErrors().isEmpty()
+                ? "입력값이 올바르지 않습니다." : e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        return ResponseEntity.badRequest()
+                .body(ErrorResponse.of("VALIDATION_ERROR", message));
+    }
 
     // 사용자 없음 404
     @ExceptionHandler(UserNotFoundException.class)
@@ -32,7 +43,7 @@ public class UserExceptionHandler {
                 .body(ErrorResponse.of("USERNAME_EXISTS", e.getMessage()));
     }
 
-    // 잘못된 요청 400
+    // 그외 잘못된 요청처리 400
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException e) {
         return ResponseEntity.badRequest()

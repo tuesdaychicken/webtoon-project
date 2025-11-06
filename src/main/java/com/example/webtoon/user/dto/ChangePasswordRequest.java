@@ -1,5 +1,7 @@
 package com.example.webtoon.user.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ChangePasswordRequest {
 
+    @NotBlank(message = "newPassword 는 필수입니다.")
+    @Size(min = 8, message = "newPassword 는 8자 이상이어야 합니다.")
     private String newPassword;
 
 }

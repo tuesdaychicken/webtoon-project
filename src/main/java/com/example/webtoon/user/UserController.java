@@ -4,6 +4,7 @@ import com.example.webtoon.user.dto.ChangePasswordRequest;
 import com.example.webtoon.user.dto.CreateUserRequest;
 import com.example.webtoon.user.dto.UpdateUserRequest;
 import com.example.webtoon.user.dto.UserResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class UserController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<Void> createUser(@RequestBody CreateUserRequest req){
+    public ResponseEntity<Void> createUser(@RequestBody @Valid CreateUserRequest req){
 
         Long id = userService.register(
                 req.getUsername(),
@@ -57,7 +58,7 @@ public class UserController {
      * @return
      */
     @PatchMapping("/{username}")
-    public ResponseEntity<Void> updateUser(@PathVariable String username, @RequestBody UpdateUserRequest req){
+    public ResponseEntity<Void> updateUser(@PathVariable String username, @RequestBody @Valid UpdateUserRequest req){
         userService.updateUser(username, req.getName(), req.getEmail(), req.getNickname());
         return ResponseEntity.noContent().build();
     }
@@ -69,7 +70,7 @@ public class UserController {
      * @return
      */
     @PatchMapping("/{username}/password")
-    public ResponseEntity<Void> changePassword(@PathVariable String username, @RequestBody ChangePasswordRequest req
+    public ResponseEntity<Void> changePassword(@PathVariable String username, @RequestBody @Valid ChangePasswordRequest req
     ) {
         userService.changePassword(username, req.getNewPassword());
         return ResponseEntity.noContent().build();
