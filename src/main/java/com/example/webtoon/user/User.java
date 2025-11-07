@@ -44,7 +44,7 @@ public class User {
 
     //별명
     @Setter
-    @Column(name = "NICANAME",
+    @Column(name = "NICKNAME",
             unique = true,
             nullable = false,
             length = 30)

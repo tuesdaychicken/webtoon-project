@@ -1,0 +1,66 @@
+/* 공통 레이아웃 */
+body {
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    margin: 40px;
+}
+
+.card {
+    max-width: 420px;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+h1 {
+    font-size: 20px;
+    margin: 0 0 16px;
+}
+
+/* 폼 구성 */
+.row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+button {
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 8px;
+    background: #2d6cdf;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* 안내/링크 */
+.muted {
+    color: #666;
+    font-size: 12px;
+}
+
+#message {
+    color: #c20d0d;
+    margin-top: 8px;
+    min-height: 18px;
+}
+
+.links {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+a {
+    color: #2d6cdf;
+    text-decoration: none;
+}
