@@ -21,8 +21,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private static boolean isBlank(String s) { return s == null || s.trim().isEmpty(); }
-
     /**
      * 유저 생성, 회원 가입
      * @param username
@@ -116,5 +114,15 @@ public class UserService {
             throw new UserNotFoundException(username);
         }
         userRepository.deleteByUsername(username);
+    }
+
+    // 넘어오는 값 null인지 공백뿐인 문자열인지 판단하기 위한 지역 메서드
+    private static boolean isBlank(String s) { return s == null || s.trim().isEmpty(); }
+
+
+    // 로그인 검증 메서드, 일치 시 User 반환, 불일치 시 Optional.empty
+    public Optional<User> authenticate(String username, String rawPassword) {
+        return userRepository.findByUsername(username)
+                .filter(u -> passwordEncoder.matches(rawPassword, u.getPassword()));
     }
 }
