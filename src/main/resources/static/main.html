@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>메인</title>
+</head>
+<body>
+<h1>메인 페이지</h1>
+
+<!-- 로그인 상태일때 보일 영역 -->
+<div id="auth-actions" style="display:none;">
+    <p><strong><span id="display-name"></span></strong>님, 환영합니다.</p>
+    <button id="btn-logout" type="button">로그아웃</button>
+</div>
+
+<!-- 비로그인 상태일 때 보일 영역 -->
+<div id="guest-actions">
+    <p class="muted">로그인이 필요합니다.</p>
+    <button id="btn-go-login" type="button">로그인하기</button>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/main.page.js" defer></script>
+</body>
+</html>

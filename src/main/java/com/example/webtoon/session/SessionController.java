@@ -52,8 +52,8 @@ public class SessionController {
      * @param session
      * @return
      */
-    @GetMapping // [추가]
-    public ResponseEntity<SessionMeResponse> getSession(HttpSession session) { // [추가]
+    @GetMapping 
+    public ResponseEntity<SessionMeResponse> getSession(HttpSession session) { 
 
         Object attr = session.getAttribute(LOGIN_USER);
 
