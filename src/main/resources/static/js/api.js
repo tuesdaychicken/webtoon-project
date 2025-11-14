@@ -1,45 +1,53 @@
 // api.js
 
 const API = (() => {
-    const JSON_HEADERS = {'Content-Type': 'application/json'};
+    const BASE = '/api';
+    const JSON_HEADERS = { 'Content-Type': 'application/json' };
 
-    //fetch 요청 처리 메서드
-    async function request(path, {method = 'GET', body} = {}) {
-        const res = await fetch(path, {
-            method,
-            headers: JSON_HEADERS,
-            credentials: 'same-origin', // 쿠키 붙여서
-            body: body ? JSON.stringify(body) : undefined,
-        });
-
-        if (res.status >= 200 && res.status < 300) {
-
-            if (res.status === 204) return null;
-            try {
-                return await res.json();
-            } catch {
-                return null;
-            }
+    // 공통 응답 처리
+    async function handle(res) {
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+            const err = new Error(data?.message || res.statusText || 'ERROR');
+            err.status = res.status;
+            err.data = data;
+            throw err;
         }
-
-        // 에러 ErrorResponse(code,message)
-        let err;
-        try {
-            err = await res.json();
-        } catch {
-            err = {message: 'Unknown error'};
-        }
-        const e = new Error(err.message || `HTTP ${res.status}`);
-        e.code = err.code;
-        e.status = res.status;
-        throw e;
+        return data;
     }
 
-    // 세션 api
-    const login = ({username, password}) => request('/api/session', {method: 'POST', body: {username, password}});
-    const me = () => request('/api/session', {method: 'GET'});
-    const logout = () => request('/api/session', {method: 'DELETE'});
+    return {
+        // 회원가입: 201 Created 기대
+        register: ({ username, password, nickname, email }) =>
+            fetch(`${BASE}/users`, {
+                method: 'POST',
+                headers: JSON_HEADERS,
+                credentials: 'same-origin',
+                body: JSON.stringify({ username, password, nickname, email }),
+            }).then(handle),
 
+        // 로그인: 200/201/204 기대
+        login: ({ username, password }) =>
+            fetch(`${BASE}/session`, {
+                method: 'POST',
+                headers: JSON_HEADERS,
+                credentials: 'same-origin',
+                body: JSON.stringify({ username, password }),
+            }).then(handle),
 
-    return {login, me, logout};
+        // 내 세션 상태 조회
+        me: () =>
+            fetch(`${BASE}/session`, {
+                credentials: 'same-origin',
+            }).then(handle),
+
+        // 로그아웃
+        logout: () =>
+            fetch(`${BASE}/session`, {
+                method: 'DELETE',
+                credentials: 'same-origin',
+            }).then(handle),
+    };
 })();
+
+window.API = API;

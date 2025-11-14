@@ -1,0 +1,27 @@
+<header class="site-header" role="banner"
+        xmlns:th="http://www.thymeleaf.org"
+        th:fragment="siteHeader">
+
+    <div class="container">
+        <a class="logo" href="/">WEBTOON</a>
+
+        <nav class="nav" aria-label="주요">
+            <a class="nav-link" href="/main">홈</a>
+        </nav>
+
+        <div class="spacer" aria-hidden="true"></div>
+
+        <!-- 로그인 전 -->
+        <div id="guest-actions" class="actions">
+            <a class="btn" href="/login">로그인</a>
+            <a class="btn btn--primary" href="/signup">회원가입</a>
+        </div>
+
+        <!-- 로그인 후 -->
+        <div id="auth-actions" class="actions hidden">
+            <span class="welcome"><strong id="display-name"></strong> 님</span>
+            <button id="btn-logout" type="button" class="btn">로그아웃</button>
+        </div>
+    </div>
+
+</header>

@@ -8,6 +8,8 @@ import com.example.webtoon.user.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -52,23 +54,33 @@ public class SessionController {
      * @param session
      * @return
      */
-    @GetMapping 
-    public ResponseEntity<SessionMeResponse> getSession(HttpSession session) { 
-
+    @GetMapping
+    public ResponseEntity<SessionMeResponse> getSession(HttpSession session) {
+        // 세션에 로그인 사용자 키가 없으면 → 401 (본문 없음)
         Object attr = session.getAttribute(LOGIN_USER);
-
         if (attr == null) {
-            return ResponseEntity.ok(SessionMeResponse.none());
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .header(HttpHeaders.CACHE_CONTROL, "no-store")
+                    .build(); // body 없음
         }
 
+        // 세션엔 있으나 DB에 사용자가 없으면 → 401
         String username = (String) attr;
-
         return userService.findByUsername(username)
-                .map(u -> ResponseEntity.ok(SessionMeResponse.of(
-                        u.getUsername(), u.getName(), u.getNickname()
-                )))
-                .orElseGet(() -> ResponseEntity.ok(SessionMeResponse.none()));
+                .map(u -> ResponseEntity.ok()
+                        .header(HttpHeaders.CACHE_CONTROL, "no-store")
+                        .body(SessionMeResponse.of(
+                                u.getUsername(),
+                                u.getName(),
+                                u.getNickname()
+                        )))
+                .orElseGet(() -> ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .header(HttpHeaders.CACHE_CONTROL, "no-store")
+                        .build());
     }
+
 
     /**
      * 세션 삭제, 로그아웃

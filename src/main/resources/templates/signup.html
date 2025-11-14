@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title layout:fragment="title">회원가입</title>
+
+    <th:block layout:fragment="pageStyles">
+        <link rel="stylesheet" href="/css/pages/signup.css" />
+    </th:block>
+</head>
+<body>
+<!-- 빈 영역의 헤더 블록으로 헤더 구현 x -->
+<th:block layout:fragment="header"></th:block>
+
+<section layout:fragment="content">
+    <div class="container">
+        <h1>회원가입</h1>
+
+        <form id="signup-form" class="form" method="post" action="/api/users">
+
+            <fieldset class="fieldset">
+                <legend>계정 정보</legend>
+                <div class="form-row">
+                    <label for="username">아이디</label>
+                    <input id="username" name="username" type="text" autocomplete="username" required />
+                </div>
+                <div class="form-row">
+                    <label for="password">비밀번호</label>
+                    <input id="password" name="password" type="password" autocomplete="new-password" required />
+                </div>
+                <div class="form-row">
+                    <label for="passwordConfirm">비밀번호 확인</label>
+                    <input id="passwordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" required />
+                </div>
+            </fieldset>
+
+            <fieldset class="fieldset">
+                <legend>기본 정보</legend>
+                <div class="form-row">
+                    <label for="name">이름</label>
+                    <input id="name" name="name" type="text" required />
+                </div>
+                <div class="form-row">
+                    <label for="nickname">닉네임</label>
+                    <input id="nickname" name="nickname" type="text" />
+                </div>
+                <div class="form-row">
+                    <label for="email">이메일</label>
+                    <input id="email" name="email" type="email" autocomplete="email" />
+                </div>
+                <div class="form-row">
+                    <label for="birth">생년월일</label>
+                    <input id="birth" name="birth" type="date" />
+                </div>
+                <div class="form-row">
+                    <label for="gender">성별</label>
+                    <select id="gender" name="gender">
+                        <option value="">선택</option>
+                        <option value="FEMALE">여성</option>
+                        <option value="MALE">남성</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="phone">전화번호</label>
+                    <input id="phone" name="phone" type="tel" autocomplete="tel-national" />
+                </div>
+            </fieldset>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn--primary">회원가입</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<th:block layout:fragment="pageScripts">
+    <script defer src="/js/pages/signup.page.js"></script>
+</th:block>
+</body>
+</html>

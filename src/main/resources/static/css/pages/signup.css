@@ -1,0 +1,113 @@
+/* src/main/resources/static/css/signup.css */
+/* 레이아웃은 flex만 사용합니다. */
+
+:root{
+    --bg: #0c1116;
+    --panel: #141a22;
+    --text: #e8edf2;
+    --muted: #9fb0c2;
+    --primary: #4ea3ff;
+    --primary-strong: #7bb7ff;
+    --border: #1e2a36;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+}
+
+/* 페이지 전체 가운데 정렬 (flex) */
+.page {
+    min-height: 100vh;
+    display: flex;                 /* flex only */
+    align-items: center;           /* 수직 중앙 */
+    justify-content: center;       /* 수평 중앙 */
+    padding: 24px;
+}
+
+/* 카드 패널 (세로 배치) */
+.panel {
+    display: flex;                 /* flex only */
+    flex-direction: column;        /* 세로 정렬 */
+    gap: 16px;                     /* 요소 간격 */
+    width: 100%;
+    max-width: 480px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+}
+
+.title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.msg {
+    min-height: 20px;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+/* 폼 전체를 세로 정렬 (flex) */
+.form {
+    display: flex;                 /* flex only */
+    flex-direction: column;        /* 세로 정렬 */
+    gap: 12px;
+}
+
+/* 각 필드 묶음 (세로 정렬) */
+.row {
+    display: flex;                 /* flex only */
+    flex-direction: column;        /* 라벨 위, 인풋 아래 */
+    gap: 6px;
+}
+
+.label {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+input {
+    height: 42px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #0f151d;
+    color: var(--text);
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(78,163,255,0.18);
+}
+
+.btn {
+    height: 44px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 800;
+    cursor: pointer;
+    background: var(--primary);
+    color: #0b0f14;
+}
+
+.btn:hover { background: var(--primary-strong); }
+
+.guide {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.link {
+    color: var(--primary);
+    text-decoration: none;
+}
+.link:hover { text-decoration: underline; }
