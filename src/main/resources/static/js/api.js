@@ -18,12 +18,12 @@ const API = (() => {
 
     return {
         // 회원가입: 201 Created 기대
-        register: ({ username, password, nickname, email }) =>
+        register: ({ username, password, nickname, email, name }) =>
             fetch(`${BASE}/users`, {
                 method: 'POST',
                 headers: JSON_HEADERS,
                 credentials: 'same-origin',
-                body: JSON.stringify({ username, password, nickname, email }),
+                body: JSON.stringify({ username, password, nickname, email, name }),
             }).then(handle),
 
         // 로그인: 200/201/204 기대

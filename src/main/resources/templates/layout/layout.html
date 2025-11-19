@@ -10,7 +10,7 @@
     <!-- 페이지별 제목이 오면 치환됨 -->
     <title layout:fragment="title">레이아웃 기본 설정 제목</title>
 
-    <!-- 공통 스타일 -->
+    <!-- 헤더 공통 스타일 -->
     <link rel="stylesheet" href="/css/partials/header.css"/>
 
     <!-- 페이지 전용 스타일 슬롯(필요한 페이지에서만 채움) -->
@@ -33,6 +33,7 @@
 <!-- 공통 스크립트 -->
 <script defer src="/js/api.js"></script>
 <script defer src="/js/partials/header.js"></script>
+<script defer src="/js/lib/ui.error.js"></script>
 
 <!-- 페이지 전용 스크립트 슬롯 -->
 <th:block layout:fragment="pageScripts"></th:block>
